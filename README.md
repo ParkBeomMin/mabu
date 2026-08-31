@@ -1,30 +1,88 @@
-# claude-harness
+<p align="center">
+  <img src="assets/banner.png" alt="claude-harness" width="720">
+</p>
 
-Claude Code에서 도메인 맞춤 **에이전트 하네스**(에이전트 정의 + 스킬 + 오케스트레이션)를
-설계·생성·진화시키는 메타 스킬. `/harness 결제 모듈 리뷰 하네스 만들어줘`처럼 쓴다.
+<p align="center">
+  <img src="https://img.shields.io/badge/Version-2.0.0-brightgreen.svg" alt="Version">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License"></a>
+  <img src="https://img.shields.io/badge/Claude_Code-%E2%89%A5_2.1.178-purple.svg" alt="Claude Code">
+  <img src="https://img.shields.io/badge/Mode-Workflow_Orchestration-orange.svg" alt="Workflow">
+  <img src="https://img.shields.io/badge/Composes-superpowers_·_paperthin_·_eli5_·_ponytail-teal.svg" alt="Skill Composition">
+</p>
 
-[revfactory/harness](https://github.com/revfactory/harness)의 방법론을 이어받아
-**Claude Code v2.1.178+ 실행 계층에 맞게 전면 재작성**한 버전이다.
+# claude-harness — Workflow 네이티브 에이전트 하네스 팩토리
+
+> **"이 프로젝트에 하네스 만들어줘"** 한 문장이면, 도메인 설명이 에이전트 정의(`.claude/agents/`) +
+> 스킬(`.claude/skills/`) + **결정론적 Workflow 오케스트레이션 스크립트**(`workflows/`)로 바뀐다.
+
+[revfactory/harness](https://github.com/revfactory/harness)의 방법론(Phase 워크플로우, 생성-검증
+루프, 스킬 작성 규율)을 이어받아, **Claude Code v2.1.178+ 의 실행 계층에 맞게 전면 재작성**한
+버전이다. 원본이 전제한 `TeamCreate` 팀 API는 v2.1.178에서 제거됐다 — 이 버전은 공식
+Workflow 도구(`agent()`/`pipeline()`/`parallel()`)를 기본 실행 계층으로 쓴다.
+
+## 핵심 관점
+
+**판단은 에이전트에, 흐름은 스크립트에.** "누가 다음에 뭘 하나"를 모델 재량에 두면 실행마다
+결과가 바뀐다. 이 하네스가 만드는 오케스트레이션은 순서·병렬·루프 상한·산출물 스키마를
+JavaScript가 강제하고, 모델은 각 단계 안의 판단만 맡는다.
 
 ## 원본과 다른 점
 
-| | 원본 | 이 버전 |
+| | revfactory/harness | claude-harness |
 |---|---|---|
-| 기본 실행 모드 | 에이전트 팀 (`TeamCreate` — v2.1.178에서 제거됨) | **Workflow** 결정론적 오케스트레이션 (`agent()`/`pipeline()`/`parallel()`) |
-| 팀 모드 | 무조건 최우선 | 조건부 — 환경 감사에서 자동 팀 형성이 켜져 있을 때만 |
+| 기본 실행 모드 | 에이전트 팀 (`TeamCreate` — v2.1.178에서 제거) | **Workflow** 결정론적 오케스트레이션 |
+| 팀 모드 | 무조건 최우선 | 조건부 — **Phase 0 환경 감사**에서 자동 팀 형성이 켜져 있을 때만 |
 | 모델 배정 | 전 에이전트 `opus` 강제 | 작업 성격별 model/effort (기본 `inherit`) |
-| 오케스트레이터 | 스킬 산문으로 흐름 기술 | 진입 스킬 + `workflows/*.workflow.mjs` 2계층 — 흐름은 코드가 강제 |
-| 신기능 | — | 에이전트 `skills` 사전 로드·`isolation: worktree`·`memory`, 스킬 `context: fork`·`allowed-tools` 반영 |
-| 예시 | 가상 팀 예시 | 실운영 하네스 2종 (생성-검증 루프 / 팬아웃 파이프라인) |
-| 스킬 조달 | — | 기성 스킬(superpowers·eli5 등)을 에이전트 `skills:`로 물리는 조달 우선 원칙 + 작업 유형별 매핑 |
+| 오케스트레이터 | 스킬 산문으로 흐름 기술 | 진입 스킬 + `workflows/*.workflow.mjs` 2계층 |
+| 스킬 조달 | — | **만들기 전에 물려라** — 기성 스킬을 에이전트 `skills:`로 사전 로드 |
+| 신기능 반영 | — | 에이전트 `skills`·`effort`·`isolation: worktree`·`memory`, 스킬 `context: fork`·`allowed-tools` |
+| 예시 | 가상 팀 5종 | 실운영 하네스 2종 (생성-검증 루프 / 팬아웃 파이프라인) |
 
-핵심 관점: **판단은 에이전트에, 흐름은 스크립트에.** "누가 다음에 뭘 하나"를 모델 재량에
-두면 실행마다 결과가 바뀐다. Workflow가 순서·병렬·루프 상한·산출물 스키마를 강제하고,
-모델은 각 단계 안의 판단만 맡는다.
+## Key Features
+
+- **환경 감사 우선** — 설계 전에 Workflow 유무·팀 활성화·설치 스킬 인벤토리를 확인한다.
+  없는 도구를 전제로 한 설계가 하네스 실패의 제1 원인이다
+- **결정론적 오케스트레이션** — 팬아웃·생성-검증 루프·재시도·스키마 검증을 Workflow
+  스크립트가 강제. 중단 시 `resumeFromRunId`로 완료 지점부터 재개
+- **스킬 조달(Composition)** — superpowers·paperthin·eli5·ponytail 등 검증된 기성 스킬을
+  작업 유형별 매핑에 따라 에이전트에 물린다. 미설치 환경에서는 원칙 한 줄로 우아하게 강등
+- **작업 성격별 모델 배정** — 판단 작업은 상위 티어/high effort, 기계 작업은 haiku/low.
+  기본은 `inherit`로 사용자의 세션 선택을 존중
+- **검증 내장** — 트리거 검증(should / should-NOT near-miss), with-skill 비교 실행,
+  드라이런, 경계면 교차 비교 QA
+
+## Workflow
+
+```
+Phase 0: 현황·환경 감사 (실행 수단 + 설치 스킬 인벤토리)
+    ↓
+Phase 1: 도메인 분석
+    ↓
+Phase 2: 아키텍처 설계 (Workflow / 서브 에이전트 / 팀)
+    ↓
+Phase 3: 에이전트 정의 생성 (.claude/agents/)
+    ↓
+Phase 4: 스킬 조달 → 생성 (.claude/skills/)
+    ↓
+Phase 5: 오케스트레이션 (workflows/*.workflow.mjs)
+    ↓
+Phase 6: 검증·테스트
+    ↓
+Phase 7: 진화 (피드백 반영 + 변경 이력)
+```
 
 ## 설치
 
-```bash
+### 플러그인으로
+
+```shell
+/plugin marketplace add ParkBeomMin/claude-harness
+/plugin install harness@claude-harness-marketplace
+```
+
+### 전역 스킬로 직접 설치
+
+```shell
 git clone https://github.com/ParkBeomMin/claude-harness
 cp -r claude-harness/skills/harness ~/.claude/skills/   # 심볼릭 링크 말고 복사
 ```
@@ -32,18 +90,138 @@ cp -r claude-harness/skills/harness ~/.claude/skills/   # 심볼릭 링크 말�
 ## 구조
 
 ```
-skills/harness/
-├── SKILL.md                          # Phase 0~7 워크플로우 (308줄)
-└── references/
-    ├── agent-design-patterns.md      # 실행 모드·패턴·에이전트 frontmatter 전체
-    ├── orchestrator-template.md      # Workflow 스크립트 + 진입 스킬 템플릿
-    ├── skill-writing-guide.md        # description·본문·스킬 frontmatter
-    ├── skill-testing-guide.md        # with/without 비교, 트리거 검증
-    ├── skill-composition.md          # 기성 스킬 조달 (superpowers·eli5 매핑)
-    ├── qa-agent-guide.md             # 경계면 교차 비교 QA
-    └── harness-examples.md           # 실전 예시 2종
+claude-harness/
+├── .claude-plugin/
+│   ├── plugin.json                   # 플러그인 매니페스트
+│   └── marketplace.json
+├── skills/harness/
+│   ├── SKILL.md                      # Phase 0~7 워크플로우
+│   └── references/
+│       ├── agent-design-patterns.md  # 실행 모드·패턴·에이전트 frontmatter 전체
+│       ├── orchestrator-template.md  # Workflow 스크립트 + 진입 스킬 템플릿
+│       ├── skill-composition.md      # 기성 스킬 조달 — 매핑·함정·이식성
+│       ├── skill-writing-guide.md    # description·본문·스킬 frontmatter
+│       ├── skill-testing-guide.md    # with/without 비교·트리거 검증
+│       ├── qa-agent-guide.md         # 경계면 교차 비교 QA
+│       └── harness-examples.md       # 실운영 하네스 예시 2종
+├── LICENSE / NOTICE
+└── README.md
 ```
 
-## 라이선스
+## 사용법
 
-Apache-2.0. 원본 저작자 표시는 [NOTICE](NOTICE) 참조.
+설치 후 이런 문장으로 트리거된다:
+
+```
+이 프로젝트에 하네스 만들어줘
+스테이지 제작 에이전트 구성해줘
+멀티 에이전트 파이프라인 짜줘
+하네스 점검해줘 / 에이전트 하나 추가해줘
+```
+
+### 실행 모드
+
+| 모드 | 언제 | 실행 수단 |
+|------|------|----------|
+| **Workflow** (기본) | 제어 흐름을 미리 그릴 수 있는 다단계 작업 | `agent()` / `pipeline()` / `parallel()` |
+| 서브 에이전트 | 위임 1~2회, 단계 사이 사람 판단 필요 | `Agent` 도구 |
+| 에이전트 팀 (조건부) | 실시간 상호 토론이 품질을 좌우 **+ 팀이 켜져 있음** | 자동 팀 형성 + `SendMessage` |
+
+### 조달 생태계 — 하네스가 물어주는 기성 스킬
+
+| 에이전트 작업 | 물리는 스킬 | 출처 |
+|---|---|---|
+| 설계·기획 발산 | `superpowers:brainstorming` | [superpowers](https://github.com/obra/superpowers) |
+| 디버깅·QA | `superpowers:systematic-debugging` + `verification-before-completion` | superpowers |
+| 구현 | `superpowers:test-driven-development` | superpowers |
+| 계획 킬 테스트 | `paperthin:hate` (검증 전용 에이전트에만) | [paperthin](https://github.com/LilMGenius/paperthin) |
+| 인수 스모크 | `paperthin:shower` · `factchk` | paperthin |
+| 문서·스킬 정리 | `paperthin:debloat` · `re0` · `ssotize` | paperthin |
+| 코드 최소주의 | `ponytail` — **skills: 사전 로드로만** (자가 발동 0회 실측) | [ponytail](https://github.com/DietrichGebert/ponytail) |
+| 사용자 대면 보고 | `eli5` | [ELI5](https://github.com/DreambigOu/ELI5) |
+
+미설치 스킬은 `skills:`에 적지 않는다(유령 참조는 조용히 죽는다) — 대신 원칙 한 줄이
+에이전트 본문에 들어가 방향은 유지된다. 상세: [skill-composition.md](skills/harness/references/skill-composition.md)
+
+## Use Cases — 이렇게 시켜보라
+
+**게임 콘텐츠 공장 (생성-검증 루프)**
+```
+설득 게임의 스테이지를 만드는 하네스를 구성해줘. 시나리오 작가가 초안을 쓰면
+밸런스 테스터가 실제로 3번 플레이해서 난이도를 검증하고, 불합격이면 지적사항과
+함께 작가에게 돌려보내는 루프로. 수정은 최대 2회까지만.
+```
+
+**콘텐츠 멀티포맷 (팬아웃 파이프라인)**
+```
+세미나 녹음을 받아서 요약, 카드뉴스, 인포그래픽, PPT를 뽑는 하네스를 만들어줘.
+전사 같은 기계적 단계는 싼 모델로, 요약·구성은 좋은 모델로 배정하고,
+산출물 4종은 병렬로.
+```
+
+**코드 리뷰 (팬아웃 + 교차 검증)**
+```
+이 저장소의 코드 리뷰 하네스를 만들어줘. 아키텍처·보안·성능·스타일을 병렬로
+훑고, 발견된 지적은 반박 전담 에이전트가 걸러낸 뒤 하나의 리포트로 합쳐줘.
+```
+
+**리서치 (수집 → 검증 → 종합)**
+```
+주제를 주면 다각도로 조사하는 딥리서치 하네스를 구성해줘. 수집 에이전트들이
+서로 다른 경로로 팬아웃하고, factchk 게이트를 통과한 것만 종합 보고서에 실리게.
+```
+
+## 산출물
+
+하네스가 대상 프로젝트에 생성하는 것:
+
+```
+your-project/
+├── .claude/
+│   ├── agents/          # 에이전트 정의 (skills: 사전 로드 포함)
+│   └── skills/          # 도메인 스킬 + 오케스트레이터 진입 스킬
+├── workflows/           # *.workflow.mjs — 흐름의 정본
+├── _workspace/          # 중간 산출물 (감사 추적)
+└── CLAUDE.md            # 하네스 포인터 + 요구 스킬 + 변경 이력
+```
+
+## FAQ
+
+<details>
+<summary><b>Q1. 원본(revfactory/harness)과의 관계는?</b></summary>
+
+**A.** 방법론을 계승한 파생 저작물이다(Apache-2.0, [NOTICE](NOTICE)에 명시). Phase 구조,
+생성-검증 루프, pushy description, 트리거 검증은 원본의 가치라 보존했다. 갈아엎은 것은
+실행 계층이다 — 원본의 기본 모드가 전제한 `TeamCreate`/`TaskCreate`가 v2.1.178에서
+제거되면서, 원본 그대로는 최신 Claude Code에서 기본 모드가 동작하지 않는다.
+</details>
+
+<details>
+<summary><b>Q2. 왜 팀 모드가 기본이 아닌가?</b></summary>
+
+**A.** 두 가지다. (1) 팀은 여전히 experimental이고 환경변수를 켜야만 존재한다 — 없는
+환경에서 팀을 전제한 하네스는 통째로 죽는다. 그래서 Phase 0 환경 감사가 먼저다.
+(2) 팀의 가치인 "다른 시각의 반박"은 Workflow의 생성 → 교차 검증 → 종합 다단계로
+비동기 구현이 가능하며, 이쪽은 순서·상한·스키마가 재현 가능하다. 팀이 켜져 있고
+실시간 토론이 정말 필요한 경우에만 팀을 고른다.
+</details>
+
+<details>
+<summary><b>Q3. 물린 스킬(superpowers 등)이 없는 환경에서는?</b></summary>
+
+**A.** 하네스는 남의 스킬을 복사·설치하지 않는다. 대신 생성 시점에 인벤토리를 확인해서
+① 있으면 `skills:` 사전 로드, ② 없으면 그 스킬의 핵심 원칙 한 줄을 에이전트 본문에
+박는다. 방향은 유지되고 깊이는 손실되는 우아한 강등이다 — 원칙형 스킬(ponytail)은
+거의 무손실, 절차형(superpowers)·데이터형(eli5)은 설치가 값을 한다. 생성된 CLAUDE.md의
+"요구 스킬" 줄이 뭘 깔면 좋은지 알려준다.
+</details>
+
+## Requirements
+
+- Claude Code **v2.1.178+** (Workflow 도구)
+- 선택: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` (팀 모드를 쓰려면)
+- 선택: [superpowers](https://github.com/obra/superpowers) · [paperthin](https://github.com/LilMGenius/paperthin) 플러그인 (조달 매핑을 온전히 쓰려면)
+
+## License
+
+Apache 2.0 — 원저작자 표시는 [NOTICE](NOTICE) 참조.
