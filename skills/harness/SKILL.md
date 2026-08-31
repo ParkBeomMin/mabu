@@ -225,8 +225,10 @@ return { draft, verdict }
   워크플로우가 어긋나지 않게 하는 접점이다
 - 실패는 `null`로 돌아온다 — `.filter(Boolean)` 후 진행하고, 누락은 결과에 명시한다
 - 바리어(`parallel`)는 전 단계 결과 전체가 필요할 때만. 기본은 `pipeline`
-- 진입은 오케스트레이터 스킬이 맡는다: 트리거를 받고 → 컨텍스트 확인(Phase 0) →
-  `Workflow({scriptPath, args})` 호출. 스킬이 Workflow 호출을 지시하는 것은 공식 패턴이다
+- 진입은 오케스트레이터 스킬이 맡는다: 트리거 → 컨텍스트 확인 → **브리프 컴파일**
+  (거친 요청을 목표·제약·산출물 형식·가정 목록의 구조화 브리프로 번역 — 에이전트 품질은
+  브리프 품질을 못 넘는다) → `Workflow({scriptPath, args})` 호출. 스킬이 Workflow 호출을
+  지시하는 것은 공식 패턴이다
 
 서브 에이전트 모드의 오케스트레이터와 전체 템플릿: `references/orchestrator-template.md`.
 
