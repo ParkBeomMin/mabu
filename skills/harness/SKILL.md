@@ -27,7 +27,9 @@ license: Apache-2.0
 2. **환경 감사** — 설계 전에 이 환경에서 실제로 쓸 수 있는 실행 수단을 확인한다:
    - `Workflow` 도구가 있는가
    - 에이전트 팀이 켜져 있는가 (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` — 켜져 있지 않으면 팀 모드를 설계하지 마라)
-   - 없는 도구를 전제로 설계하는 것이 하네스 실패의 제1 원인이다
+   - **설치 스킬 인벤토리**: `~/.claude/skills/`(전역) + 프로젝트 스킬 + 플러그인
+     (`installed_plugins.json`) — 조달 가능한 기성 스킬 목록을 만든다
+   - 없는 도구·없는 스킬을 전제로 설계하는 것이 하네스 실패의 제1 원인이다
 3. 현황에 따라 분기:
    - **신규 구축** → Phase 1부터 전체 실행
    - **기존 확장** → 아래 매트릭스로 필요한 Phase만 실행
@@ -138,9 +140,15 @@ memory: project               # 실행 간 지속 메모리가 필요할 때
 각 에이전트가 쓸 스킬을 `프로젝트/.claude/skills/{name}/SKILL.md`에 만든다.
 상세 가이드: `references/skill-writing-guide.md`.
 
-#### 4-0. 기존 스킬 중복 검토
+#### 4-0. 조달 우선 — 만들기 전에 물려라
 
-신규 생성 전 기존 스킬과 중복을 확인한다. 겹치면 새로 만들지 말고 일반화한다.
+새 스킬 작성은 조달이 실패한 뒤의 일이다. 순서:
+1. **기성 스킬 조달**: Phase 0 인벤토리에서 이 작업 유형을 커버하는 스킬을 찾아
+   에이전트의 `skills:` 필드로 물린다 (플러그인은 `plugin:skill` 형식). 작업 유형별
+   추천 매핑과 함정: `references/skill-composition.md` **필독**
+2. **기존 프로젝트 스킬 중복 검토**: 겹치면 새로 만들지 말고 일반화한다
+3. 둘 다 아니면 신규 작성 — 단, 물린 기성 스킬과 같은 내용을 다시 쓰지 않는다.
+   하네스 스킬에는 도메인 고유 지식만 남긴다
 
 #### 4-1. 구조와 frontmatter
 
@@ -293,7 +301,7 @@ return { draft, verdict }
 - [ ] 실행 모드 명시 + **환경 감사 근거** (없는 도구 전제 설계 금지)
 - [ ] 모델·노력을 작업 성격별 배정 (전부 최상위 모델 금지, 기본 `inherit`)
 - [ ] `skills` 사전 로드 + 본문 "읽어라" 병기 (이중 안전장치)
-- [ ] 중복 검토 완료 (3-0, 4-0)
+- [ ] 중복 검토 완료 (3-0, 4-0) + **기성 스킬 조달 검토** (skills: 물리기, 미설치 이름 금지)
 - [ ] description pushy + 후속 키워드
 - [ ] 트리거 검증 (should / should-NOT)
 - [ ] CLAUDE.md 포인터 + 변경 이력
@@ -303,6 +311,7 @@ return { draft, verdict }
 
 - 실행 모드·패턴·에이전트 frontmatter 전체: `references/agent-design-patterns.md`
 - 오케스트레이터 템플릿 (Workflow + 서브): `references/orchestrator-template.md`
+- 기성 스킬 조달 (superpowers·eli5 등): `references/skill-composition.md`
 - 스킬 작성: `references/skill-writing-guide.md` / 테스트: `references/skill-testing-guide.md`
 - QA 에이전트: `references/qa-agent-guide.md`
 - 실전 예시: `references/harness-examples.md`
