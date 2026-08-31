@@ -61,6 +61,11 @@ skills:
 | 병렬 파일 수정 | `superpowers:using-git-worktrees` (또는 `isolation: worktree`) | 충돌 격리 |
 | 사용자 대면 설명·보고·문서 | `eli5` (설치돼 있다면) | 청중 눈높이 보정 — 보고 에이전트의 만성 문제인 전문용어 과다를 잡는다 |
 | 코드를 쓰는 모든 에이전트 | `ponytail` (설치돼 있다면) — 아래 §3-1 필독 | 코드 최소주의. 토큰 절약 스킬 중 유일하게 실측에서 비용을 줄인 것 |
+| 계획·설계의 킬 테스트 | `paperthin:hate` | 죽일 수 있는 반론 딱 하나 + 최저가 검증 실험. 체크리스트 감상평 방지 |
+| 인수 직전 스모크 테스트 | `paperthin:shower` | 제로 컨텍스트 서브세션이 산출물을 콜드리딩 — "혼자 읽어도 서나" |
+| 주장·수치 검증 | `paperthin:factchk` | 양방향 검증 — 뻔한 게 거짓일 가능성까지 |
+| 문서·스킬 산출물 정리 | `paperthin:debloat` / `re0` / `ssotize` | 규칙 안 자르는 압축 / 패치 누적 대신 v0 재작성 / 단일 출처 통합 |
+| 모델 배정 재확인 | `paperthin:modelchk` | 실행 시점에 "가장 싼 충분한 티어" 재산정 — Phase 3-2(설계 시점 배정)와 상보 |
 
 QA 에이전트에는 systematic-debugging + verification-before-completion 조합이 기본값으로
 좋다 — QA의 실패 모드(존재 확인만 하고 통과)를 정확히 겨냥한다.
@@ -85,6 +90,21 @@ ponytail(코드 최소주의)은 JetBrains의 80쌍 대조 실험에서 **토큰
 - 효과가 큰 곳은 프론트엔드처럼 과다구축 함정이 많은 구현 에이전트다(큰 빌드에서 −31%까지
   측정). 콘텐츠 생성·분석 에이전트에는 물릴 이유가 없다
 
+### 3-2. paperthin — 선별해서 물려라
+
+paperthin(LilMGenius/paperthin, MIT)은 산출물 위생 반사신경 28종이다. superpowers가
+**작업 절차**라면 paperthin은 **산출물 품질 게이트**다 — 하네스의 검증자 역할과 궁합이 좋다.
+
+- **전부 물리지 마라.** 28종 중 위 표의 것들만 역할에 맞게. 전역 설치는 상시 컨텍스트에
+  스킬 description 28개를 얹는 비용이 있으니, 하네스가 쓸 것만 물리는 편이 낫다
+- `hate`는 저자가 일부러 `disable-model-invocation: true`로 막아뒀다(상시 장착하면 에이전트가
+  철거 쪽으로 편향된다는 이유). **검증 전용 에이전트에 사전 로드하는 건 오히려 그 의도에
+  부합한다** — 그 에이전트의 일이 공격이니까. 생성 에이전트에는 절대 물리지 마라
+- 참조 이름은 설치 방식에 따라 다르다 — 플러그인 설치면 `paperthin:hate`, skills CLI로
+  디렉터리 설치면 `hate`. Phase 6 검증에서 실제 이름을 확인하라
+- 설치 시 주의: 공식 quickstart는 심볼릭 링크 설치(자동 업데이트)를 권장하는데, **휘발성
+  컨테이너·CI에서는 링크 원본이 사라져 스킬이 조용히 죽는다.** 그런 환경은 복사 설치를 쓴다
+
 ## 4. 역할 충돌 정리
 
 - `superpowers:writing-skills` vs 이 하네스의 Phase 4 — **하네스가 우선한다.** 하네스는
@@ -92,6 +112,9 @@ ponytail(코드 최소주의)은 JetBrains의 80쌍 대조 실험에서 **토큰
   개별 스킬 문장을 다듬을 때 보조 참고로만
 - `superpowers:subagent-driven-development` / `dispatching-parallel-agents` vs Workflow —
   Workflow가 있으면 Workflow. 저 스킬들은 Workflow 도구가 없는 환경의 수동 패턴이다
+- paperthin의 `coil` 카테고리(re0-loop·re0-plan — 반복 사이클 방법론)와 `mesh`(다중 심판
+  수렴)는 하네스의 오케스트레이션·Workflow judge 패턴과 역할이 겹친다 — **하네스가 우선.**
+  paperthin에서는 개별 산출물 게이트(depth/breadth)만 가져온다
 - 트리거 검증(Phase 6-4) 시 물린 기성 스킬과 새 스킬의 description이 서로 침범하지
   않는지 near-miss 쿼리에 포함한다
 
