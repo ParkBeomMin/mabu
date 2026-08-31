@@ -110,7 +110,7 @@ Phase 7: Evolution (feedback + change log)
 
 ```shell
 git clone https://github.com/ParkBeomMin/mabu
-cp -r mabu/skills/harness ~/.claude/skills/   # copy, don't symlink
+cp -r mabu/skills/mabu ~/.claude/skills/   # copy, don't symlink
 ```
 
 ## Structure
@@ -120,7 +120,7 @@ mabu/
 ├── .claude-plugin/
 │   ├── plugin.json                   # Plugin manifest
 │   └── marketplace.json
-├── skills/harness/
+├── skills/mabu/
 │   ├── SKILL.md                      # The Phase 0–7 workflow
 │   └── references/
 │       ├── agent-design-patterns.md  # Execution modes, patterns, full agent frontmatter
@@ -168,7 +168,7 @@ Audit my harness / add one more agent
 
 Skills that aren't installed never go into `skills:` (ghost references die silently) —
 instead a one-line principle lands in the agent body, so the direction survives.
-Details: [skill-composition.md](skills/harness/references/skill-composition.md)
+Details: [skill-composition.md](skills/mabu/references/skill-composition.md)
 
 ## Use Cases — try these prompts
 

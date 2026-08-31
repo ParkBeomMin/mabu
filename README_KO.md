@@ -100,7 +100,7 @@ Phase 7: 진화 (피드백 반영 + 변경 이력)
 
 ```shell
 git clone https://github.com/ParkBeomMin/mabu
-cp -r mabu/skills/harness ~/.claude/skills/   # 심볼릭 링크 말고 복사
+cp -r mabu/skills/mabu ~/.claude/skills/   # 심볼릭 링크 말고 복사
 ```
 
 ## 구조
@@ -110,7 +110,7 @@ mabu/
 ├── .claude-plugin/
 │   ├── plugin.json                   # 플러그인 매니페스트
 │   └── marketplace.json
-├── skills/harness/
+├── skills/mabu/
 │   ├── SKILL.md                      # Phase 0~7 워크플로우
 │   └── references/
 │       ├── agent-design-patterns.md  # 실행 모드·패턴·에이전트 frontmatter 전체
@@ -157,7 +157,7 @@ mabu/
 | 사용자 대면 보고 | `eli5` | [ELI5](https://github.com/DreambigOu/ELI5) |
 
 미설치 스킬은 `skills:`에 적지 않는다(유령 참조는 조용히 죽는다) — 대신 원칙 한 줄이
-에이전트 본문에 들어가 방향은 유지된다. 상세: [skill-composition.md](skills/harness/references/skill-composition.md)
+에이전트 본문에 들어가 방향은 유지된다. 상세: [skill-composition.md](skills/mabu/references/skill-composition.md)
 
 ## Use Cases — 이렇게 시켜보라
 
