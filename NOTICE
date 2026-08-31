@@ -1,0 +1,14 @@
+claude-harness
+Copyright 2026 Beom Min Park
+
+이 저장소는 revfactory/harness (Apache License 2.0,
+https://github.com/revfactory/harness)의 방법론(Phase 구조, 생성-검증 루프,
+스킬 작성 가이드)을 기반으로, Claude Code v2.1.178+ 의 실행 계층
+(Workflow 오케스트레이션, 자동 팀 형성, 확장된 에이전트/스킬 frontmatter)에
+맞게 전면 재작성한 파생 저작물이다.
+
+주요 변경:
+- TeamCreate/TaskCreate 기반 팀 모드(제거된 API) → Workflow 기본 + 환경 감사
+- 전 에이전트 opus 강제 → 작업 성격별 model/effort 배정 (기본 inherit)
+- 오케스트레이터를 진입 스킬 + workflow 스크립트 2계층으로 분리
+- team-examples를 실전 하네스 예시로 교체
