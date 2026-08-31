@@ -1,21 +1,35 @@
 <p align="center">
-  <img src="assets/banner.png" alt="claude-harness" width="720">
+  <img src="assets/banner.png" alt="mabu" width="760">
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-2.0.0-brightgreen.svg" alt="Version">
+  <img src="https://img.shields.io/badge/Version-1.0.0-brightgreen.svg" alt="Version">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License"></a>
   <img src="https://img.shields.io/badge/Claude_Code-%E2%89%A5_2.1.178-purple.svg" alt="Claude Code">
   <img src="https://img.shields.io/badge/Mode-Workflow_Orchestration-orange.svg" alt="Workflow">
   <img src="https://img.shields.io/badge/Composes-superpowers_·_paperthin_·_eli5_·_ponytail-teal.svg" alt="Skill Composition">
 </p>
 
-# claude-harness — Workflow 네이티브 에이전트 하네스 팩토리
+# mabu (마부) — 에이전트 하네스 팩토리
 
 > **"이 프로젝트에 하네스 만들어줘"** 한 문장이면, 도메인 설명이 에이전트 정의(`.claude/agents/`) +
 > 스킬(`.claude/skills/`) + **결정론적 Workflow 오케스트레이션 스크립트**(`workflows/`)로 바뀐다.
 
-## 핵심 관점 — 판단은 에이전트에, 흐름은 스크립트에
+## 왜 '마부'인가
+
+하네스(harness)는 원래 말에 채우는 **마구**다. 마구를 짓고, 말을 고르고, 고삐를 쥐는
+사람이 마부다. 이 도구가 하는 일이 정확히 그것이다.
+
+| 마부의 세계 | 이 도구 |
+|---|---|
+| 말 | 에이전트 — 힘과 판단은 말에게서 나온다 |
+| 마구(하네스) | 에이전트 정의 + 스킬 — 말의 힘을 일로 바꾸는 장구 |
+| 고삐 | Workflow 스크립트 — 순서·병렬·상한을 쥐는 손 |
+| 행선지 | 사용자의 요청 |
+
+마부는 말이 되려 하지 않는다. 달리는 건 말이고, 마부는 길을 정한다.
+
+## 핵심 관점 — 판단은 말이, 고삐는 마부가
 
 "누가 다음에 뭘 하나"를 모델 재량에 두면 실행마다 결과가 바뀐다. 이 하네스가 만드는
 오케스트레이션은 순서·병렬·루프 상한·산출물 스키마를 JavaScript가 강제하고, 모델은
@@ -76,21 +90,21 @@ Phase 7: 진화 (피드백 반영 + 변경 이력)
 ### 플러그인으로
 
 ```shell
-/plugin marketplace add ParkBeomMin/claude-harness
-/plugin install harness@claude-harness-marketplace
+/plugin marketplace add ParkBeomMin/mabu
+/plugin install mabu@mabu-marketplace
 ```
 
 ### 전역 스킬로 직접 설치
 
 ```shell
-git clone https://github.com/ParkBeomMin/claude-harness
-cp -r claude-harness/skills/harness ~/.claude/skills/   # 심볼릭 링크 말고 복사
+git clone https://github.com/ParkBeomMin/mabu
+cp -r mabu/skills/harness ~/.claude/skills/   # 심볼릭 링크 말고 복사
 ```
 
 ## 구조
 
 ```
-claude-harness/
+mabu/
 ├── .claude-plugin/
 │   ├── plugin.json                   # 플러그인 매니페스트
 │   └── marketplace.json

@@ -1,15 +1,15 @@
 {
-  "name": "claude-harness-marketplace",
+  "name": "mabu-marketplace",
   "owner": {
     "name": "ParkBeomMin",
     "url": "https://github.com/ParkBeomMin"
   },
   "plugins": [
     {
-      "name": "harness",
+      "name": "mabu",
       "source": "./",
       "description": "Workflow 기반 에이전트 하네스 팩토리. 에이전트 정의·스킬·오케스트레이션 스크립트를 생성하고, 기성 스킬(superpowers·paperthin 등)을 조달해 물린다.",
-      "version": "2.0.0"
+      "version": "1.0.0"
     }
   ]
 }

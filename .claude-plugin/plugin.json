@@ -1,13 +1,13 @@
 {
-  "name": "harness",
-  "description": "Workflow-native agent harness factory for Claude Code v2.1.178+ — a meta-skill that turns a domain description into agent definitions, skills, and a deterministic Workflow orchestration script. 도메인 한 문장을 에이전트 정의·스킬·Workflow 오케스트레이션 스크립트로 바꾸는 메타 스킬. revfactory/harness의 방법론을 최신 실행 계층에 맞게 전면 재작성.",
-  "version": "2.0.0",
+  "name": "mabu",
+  "description": "mabu(마부) — agent harness factory for Claude Code v2.1.178+. 도메인 한 문장을 에이전트 정의·스킬·Workflow 오케스트레이션 스크립트로 바꾸는 메타 스킬. 판단은 말이, 고삐는 마부가.",
+  "version": "1.0.0",
   "author": {
     "name": "Beom Min Park",
     "url": "https://github.com/ParkBeomMin"
   },
-  "homepage": "https://github.com/ParkBeomMin/claude-harness",
-  "repository": "https://github.com/ParkBeomMin/claude-harness",
+  "homepage": "https://github.com/ParkBeomMin/mabu",
+  "repository": "https://github.com/ParkBeomMin/mabu",
   "license": "Apache-2.0",
   "keywords": [
     "harness", "meta-skill", "workflow-orchestration", "agent-scaffolding",
