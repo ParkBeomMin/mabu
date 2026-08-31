@@ -15,28 +15,11 @@
 > **"이 프로젝트에 하네스 만들어줘"** 한 문장이면, 도메인 설명이 에이전트 정의(`.claude/agents/`) +
 > 스킬(`.claude/skills/`) + **결정론적 Workflow 오케스트레이션 스크립트**(`workflows/`)로 바뀐다.
 
-[revfactory/harness](https://github.com/revfactory/harness)의 방법론(Phase 워크플로우, 생성-검증
-루프, 스킬 작성 규율)을 이어받아, **Claude Code v2.1.178+ 의 실행 계층에 맞게 전면 재작성**한
-버전이다. 원본이 전제한 `TeamCreate` 팀 API는 v2.1.178에서 제거됐다 — 이 버전은 공식
-Workflow 도구(`agent()`/`pipeline()`/`parallel()`)를 기본 실행 계층으로 쓴다.
-
 ## 핵심 관점
 
 **판단은 에이전트에, 흐름은 스크립트에.** "누가 다음에 뭘 하나"를 모델 재량에 두면 실행마다
 결과가 바뀐다. 이 하네스가 만드는 오케스트레이션은 순서·병렬·루프 상한·산출물 스키마를
 JavaScript가 강제하고, 모델은 각 단계 안의 판단만 맡는다.
-
-## 원본과 다른 점
-
-| | revfactory/harness | claude-harness |
-|---|---|---|
-| 기본 실행 모드 | 에이전트 팀 (`TeamCreate` — v2.1.178에서 제거) | **Workflow** 결정론적 오케스트레이션 |
-| 팀 모드 | 무조건 최우선 | 조건부 — **Phase 0 환경 감사**에서 자동 팀 형성이 켜져 있을 때만 |
-| 모델 배정 | 전 에이전트 `opus` 강제 | 작업 성격별 model/effort (기본 `inherit`) |
-| 오케스트레이터 | 스킬 산문으로 흐름 기술 | 진입 스킬 + `workflows/*.workflow.mjs` 2계층 |
-| 스킬 조달 | — | **만들기 전에 물려라** — 기성 스킬을 에이전트 `skills:`로 사전 로드 |
-| 신기능 반영 | — | 에이전트 `skills`·`effort`·`isolation: worktree`·`memory`, 스킬 `context: fork`·`allowed-tools` |
-| 예시 | 가상 팀 5종 | 실운영 하네스 2종 (생성-검증 루프 / 팬아웃 파이프라인) |
 
 ## Key Features
 
@@ -50,6 +33,8 @@ JavaScript가 강제하고, 모델은 각 단계 안의 판단만 맡는다.
   기본은 `inherit`로 사용자의 세션 선택을 존중
 - **검증 내장** — 트리거 검증(should / should-NOT near-miss), with-skill 비교 실행,
   드라이런, 경계면 교차 비교 QA
+- **진화하는 시스템** — 실행마다 피드백을 에이전트·스킬·워크플로우에 반영하고
+  CLAUDE.md 변경 이력으로 추적. "다시/수정/~만 재실행" 후속 작업과 부분 재개 지원
 
 ## Workflow
 
@@ -188,26 +173,7 @@ your-project/
 ## FAQ
 
 <details>
-<summary><b>Q1. 원본(revfactory/harness)과의 관계는?</b></summary>
-
-**A.** 방법론을 계승한 파생 저작물이다(Apache-2.0, [NOTICE](NOTICE)에 명시). Phase 구조,
-생성-검증 루프, pushy description, 트리거 검증은 원본의 가치라 보존했다. 갈아엎은 것은
-실행 계층이다 — 원본의 기본 모드가 전제한 `TeamCreate`/`TaskCreate`가 v2.1.178에서
-제거되면서, 원본 그대로는 최신 Claude Code에서 기본 모드가 동작하지 않는다.
-</details>
-
-<details>
-<summary><b>Q2. 왜 팀 모드가 기본이 아닌가?</b></summary>
-
-**A.** 두 가지다. (1) 팀은 여전히 experimental이고 환경변수를 켜야만 존재한다 — 없는
-환경에서 팀을 전제한 하네스는 통째로 죽는다. 그래서 Phase 0 환경 감사가 먼저다.
-(2) 팀의 가치인 "다른 시각의 반박"은 Workflow의 생성 → 교차 검증 → 종합 다단계로
-비동기 구현이 가능하며, 이쪽은 순서·상한·스키마가 재현 가능하다. 팀이 켜져 있고
-실시간 토론이 정말 필요한 경우에만 팀을 고른다.
-</details>
-
-<details>
-<summary><b>Q3. 물린 스킬(superpowers 등)이 없는 환경에서는?</b></summary>
+<summary><b>Q. 물린 스킬(superpowers 등)이 없는 환경에서는?</b></summary>
 
 **A.** 하네스는 남의 스킬을 복사·설치하지 않는다. 대신 생성 시점에 인벤토리를 확인해서
 ① 있으면 `skills:` 사전 로드, ② 없으면 그 스킬의 핵심 원칙 한 줄을 에이전트 본문에
@@ -224,4 +190,4 @@ your-project/
 
 ## License
 
-Apache 2.0 — 원저작자 표시는 [NOTICE](NOTICE) 참조.
+Apache 2.0. [revfactory/harness](https://github.com/revfactory/harness)의 방법론을 계승했다 — 원저작자 표시는 [NOTICE](NOTICE) 참조.
