@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="mabu" width="760">
+  <img src="assets/mabu-banner.png" alt="mabu" width="760">
 </p>
 
 <p align="center">
