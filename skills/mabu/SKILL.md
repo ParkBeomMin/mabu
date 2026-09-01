@@ -14,8 +14,10 @@ license: Apache-2.0
 3. **CLAUDE.md에는 포인터만 등록한다.** 트리거 규칙 + 변경 이력. 목록·구조는 파일 시스템이 정본이다.
 4. **하네스는 진화하는 시스템이다.** 실행마다 피드백을 받아 에이전트·스킬·워크플로우를 갱신한다.
 
-> 이 스킬은 Claude Code **v2.1.178 이후** 기준으로 작성됐다. 그 이전 버전의
-> `TeamCreate`/`TeamDelete` 도구는 제거됐다 — 그 API로 하네스를 설계하지 마라.
+> **런타임:** 실행 계층의 기본 프로파일은 Claude Code **v2.1.178 이후**다(그 이전의
+> `TeamCreate`/`TeamDelete`는 제거됐으니 그 API로 설계하지 마라). 방법론 자체는 런타임과
+> 무관하며, 다른 에이전트에서 쓰려면 `references/runtimes.md`의 능력 모델로 감사한 뒤
+> 확인된 능력만으로 설계한다. **확인하지 않은 API를 문서에 적지 마라.**
 
 ## 워크플로우
 
@@ -24,7 +26,10 @@ license: Apache-2.0
 하네스 요청을 받으면 가장 먼저 기존 현황을 확인한다.
 
 1. `프로젝트/.claude/agents/`, `프로젝트/.claude/skills/`, `프로젝트/workflows/`, `프로젝트/CLAUDE.md`를 읽는다
-2. **환경 감사** — 설계 전에 이 환경에서 실제로 쓸 수 있는 실행 수단을 확인한다:
+2. **환경 감사** — 설계 전에 이 환경에서 실제로 쓸 수 있는 실행 수단을 확인한다.
+   **먼저 런타임 프로파일을 확정한다** — Claude Code가 아니면 `references/runtimes.md`의
+   능력 모델(A 오케스트레이션 / B 위임 / C 에이전트 정의 / D 스킬)로 감사하고,
+   확인된 능력만으로 설계한다. 이하는 claude-code 프로파일 기준:
    - `Workflow` 도구가 있는가
    - 에이전트 팀이 켜져 있는가 (`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` — 켜져 있지 않으면 팀 모드를 설계하지 마라)
    - **설치 스킬 인벤토리**: `~/.claude/skills/`(전역) + 프로젝트 스킬 + 플러그인
@@ -324,6 +329,7 @@ return { draft, verdict }
 - [ ] `.claude/skills/` — SKILL.md(+references), 본문 500줄 이내
 - [ ] `workflows/*.workflow.mjs` — Workflow 모드라면 스크립트 파일로 저장
 - [ ] 실행 모드 명시 + **환경 감사 근거** (없는 도구 전제 설계 금지)
+- [ ] **런타임 프로파일과 확인된 능력을 규약 문서에 기록** (다른 런타임에서 뭐가 깨지는지)
 - [ ] 모델·노력을 작업 성격별 배정 (전부 최상위 모델 금지, 기본 `inherit`)
 - [ ] `skills` 사전 로드 + 본문 "읽어라" 병기 (이중 안전장치)
 - [ ] 중복 검토 완료 (3-0, 4-0) + 기성 스킬 조달 검토 (skills: 물리기, 미설치 이름 금지)
@@ -339,6 +345,7 @@ return { draft, verdict }
 
 - 실행 모드·패턴·에이전트 frontmatter 전체: `references/agent-design-patterns.md`
 - 오케스트레이터 템플릿 (Workflow + 서브): `references/orchestrator-template.md`
+- 런타임 프로파일 (Claude Code 밖에서 쓰기): `references/runtimes.md`
 - 기성 스킬 조달 (superpowers·eli5 등): `references/skill-composition.md`
 - 스킬 작성: `references/skill-writing-guide.md` / 테스트: `references/skill-testing-guide.md`
 - QA 에이전트: `references/qa-agent-guide.md`

@@ -197,9 +197,24 @@ your-project/
 **A.** mabu never copies or installs third-party skills. At generation time it checks the inventory: ① if installed, the skill is preloaded via `skills:`; ② if not, that skill's core principle lands as one line in the agent body. Direction survives, depth degrades — a graceful fallback. Principle-style skills (ponytail) lose almost nothing; process-style (superpowers) and data-style (eli5) are worth installing. The generated CLAUDE.md's "required skills" line tells you what's worth adding.
 </details>
 
+## Portability — using mabu on other agents
+
+The methodology (Phases 0–7, the generate-verify loop, sourcing vs authoring, trigger verification) is runtime-neutral. Only the *execution layer* is tied to Claude Code. mabu audits by **capability, not product name**:
+
+| Capability | With it | Without it |
+|---|---|---|
+| **A. Deterministic orchestration** | control flow enforced by a script | numbered steps with completion criteria in the orchestrator doc; loop bounds stated in prose |
+| **B. Delegation (subagents)** | roles run in parallel, separate contexts | sequential in one session, context handed over via files |
+| **C. Agent definition files** | reusable role files | roles written as *skills*, loaded by the delegation prompt |
+| **D. Skill files** | domain skills + sourced skills | instructions consolidated into one project convention doc |
+
+**D travels almost everywhere.** `SKILL.md` is the shared distribution format that the `skills` CLI installs across 70+ agents, so the skills a harness produces port nearly as-is. A and C are where runtimes diverge.
+
+The only profile this repo has actually measured is `claude-code`. For anything else, mabu starts from the `generic` profile, confirms capabilities A–D, and designs only with what's confirmed — **never writing down an API it hasn't verified**, which is exactly how harnesses die. Details and how to contribute a profile: [runtimes.md](skills/mabu/references/runtimes.md)
+
 ## Requirements
 
-- Claude Code **v2.1.178+** (the Workflow tool)
+- Claude Code **v2.1.178+** (the Workflow tool) — or any agent, via the `generic` runtime profile above
 - Optional: `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` (for team mode)
 - Optional: [superpowers](https://github.com/obra/superpowers) · [paperthin](https://github.com/LilMGenius/paperthin) plugins (for the full composition mapping)
 
