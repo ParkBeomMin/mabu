@@ -205,6 +205,7 @@ The methodology (Phases 0–7, the generate-verify loop, sourcing vs authoring, 
 |---|---|---|
 | **A. Deterministic orchestration** | control flow enforced by a script | numbered steps with completion criteria in the orchestrator doc; loop bounds stated in prose |
 | **B. Delegation (subagents)** | roles run in parallel, separate contexts | sequential in one session, context handed over via files |
+| **B+. Mutual communication** | team mode — competing hypotheses, live rebuttal | **asynchronous rebuttal**: investigate hypotheses independently, then have a dedicated agent break each one using the others as evidence |
 | **C. Agent definition files** | reusable role files | roles written as *skills*, loaded by the delegation prompt |
 | **D. Skill files** | domain skills + sourced skills | instructions consolidated into one project convention doc |
 
