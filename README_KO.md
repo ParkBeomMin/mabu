@@ -71,19 +71,33 @@ Phase 7: 진화 (피드백 반영 + 변경 이력)
 
 ## 설치
 
-### 플러그인으로
+마부는 표준 `SKILL.md` 패키지라, `skills` CLI가 지원하는 70여 개 에이전트 어디에나 설치된다 — Codex, Cursor, Gemini CLI, Copilot, Windsurf, Zed, opencode, Goose, Roo, Kilo, Cline, Warp, Grok, Qwen Code, Trae 등.
+
+### 아무 에이전트에나 (권장)
+
+```shell
+npx skills@latest add ParkBeomMin/mabu --global --agent <agent-id> --copy
+```
+
+`<agent-id>` 자리에 쓰는 에이전트를 넣는다 — `claude-code`, `codex`, `cursor`, `gemini-cli`, `github-copilot`, `windsurf`, `zed`, `opencode`, `goose`, `roo`, `kilo`, `cline`, `warp`, `grok`, `qwen-code`, `trae`, `junie`, `continue`, `droid`, `devin` 등. 잘못된 id로 한 번 실행하면 CLI가 전체 목록을 출력해준다. `--agent '*'`로 전부에 한 번에 깔 수 있고, `--global`을 빼면 현재 프로젝트에만 설치된다.
+
+> **`--copy`를 빼지 마라.** 기본은 심볼릭 링크라 자동 업데이트가 되지만, 컨테이너·CI처럼 원본 경로가 사라지는 환경에서는 조용히 죽는다. 그리고 새로 깐 스킬은 **다음 세션부터** 인식된다.
+
+### Claude Code — 플러그인으로
 
 ```shell
 /plugin marketplace add ParkBeomMin/mabu
 /plugin install mabu@mabu-marketplace
 ```
 
-### 전역 스킬로 직접 설치
+### 수동 설치
 
 ```shell
 git clone https://github.com/ParkBeomMin/mabu
-cp -r mabu/skills/mabu ~/.claude/skills/   # 심볼릭 링크 말고 복사
+cp -r mabu/skills/mabu ~/.claude/skills/      # 또는 쓰는 에이전트의 스킬 디렉터리
 ```
+
+설치 후 `/mabu`로 부르거나, 만들고 싶은 걸 그냥 설명하면 된다([사용법](#사용법) 참조).
 
 ## 구조
 

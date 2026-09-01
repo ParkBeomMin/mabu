@@ -71,19 +71,33 @@ Phase 7: Evolution (feedback + change log)
 
 ## Installation
 
-### As a plugin
+mabu ships as a standard `SKILL.md` package, so the `skills` CLI installs it into any of the 70+ agents it supports — Codex, Cursor, Gemini CLI, Copilot, Windsurf, Zed, opencode, Goose, Roo, Kilo, Cline, Warp, Grok, Qwen Code, Trae, and more.
+
+### Any agent (recommended)
+
+```shell
+npx skills@latest add ParkBeomMin/mabu --global --agent <agent-id> --copy
+```
+
+Replace `<agent-id>` with your agent — `claude-code`, `codex`, `cursor`, `gemini-cli`, `github-copilot`, `windsurf`, `zed`, `opencode`, `goose`, `roo`, `kilo`, `cline`, `warp`, `grok`, `qwen-code`, `trae`, `junie`, `continue`, `droid`, `devin`, and others. Run the command with an invalid id once and the CLI prints the full valid list. Use `--agent '*'` to install everywhere at once, and drop `--global` to install into the current project only.
+
+> **Keep `--copy`.** The default symlinks into your agent's directory, which auto-updates but breaks silently in containers and CI when the source path disappears. Also note that a newly installed skill is picked up on the **next** session, not the current one.
+
+### Claude Code — as a plugin
 
 ```shell
 /plugin marketplace add ParkBeomMin/mabu
 /plugin install mabu@mabu-marketplace
 ```
 
-### As a global skill
+### Manual
 
 ```shell
 git clone https://github.com/ParkBeomMin/mabu
-cp -r mabu/skills/mabu ~/.claude/skills/   # copy, don't symlink
+cp -r mabu/skills/mabu ~/.claude/skills/      # or your agent's skills directory
 ```
+
+After installing, trigger it with `/mabu` or just describe what you want built (see [Usage](#usage)).
 
 ## Structure
 
