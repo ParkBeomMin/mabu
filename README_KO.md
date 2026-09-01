@@ -46,6 +46,7 @@
 - **결정론적 오케스트레이션** — 팬아웃·생성-검증 루프·재시도·스키마 검증을 Workflow 스크립트가 강제. 중단 시 `resumeFromRunId`로 완료 지점부터 재개
 - **스킬 조달(Composition)** — superpowers·paperthin·eli5·ponytail 등 검증된 기성 스킬을 작업 유형별 매핑에 따라 에이전트에 물린다. 미설치 환경에서는 원칙 한 줄로 우아하게 강등
 - **작업 성격별 모델 배정** — 판단 작업은 상위 티어/high effort, 기계 작업은 haiku/low. 기본은 `inherit`로 사용자의 세션 선택을 존중
+- **비용을 설계한다** — 하네스는 반복해서 도는 물건이라 한 번의 낭비가 실행 횟수만큼 곱해진다. 위임 1회의 고정 오버헤드를 실측해 줄이고, 루프 상한을 코드로 못박고, 스키마로 재시도를 사전 차단하고, 모델 티어를 에이전트가 아니라 *단계* 단위로 배정한다
 - **검증 내장** — 트리거 검증(should / should-NOT near-miss), with-skill 비교 실행, 드라이런, 경계면 교차 비교 QA
 - **진화하는 시스템** — 실행마다 피드백을 에이전트·스킬·워크플로우에 반영하고 CLAUDE.md 변경 이력으로 추적. "다시/수정/~만 재실행" 후속 작업과 부분 재개 지원
 
@@ -112,6 +113,8 @@ mabu/
 │       ├── agent-design-patterns.md  # 실행 모드·패턴·에이전트 frontmatter 전체
 │       ├── orchestrator-template.md  # Workflow 스크립트 + 진입 스킬 템플릿
 │       ├── skill-composition.md      # 기성 스킬 조달 — 매핑·함정·이식성
+│       ├── cost-control.md           # 호출 수·위임 오버헤드·컨텍스트 절단·재시도
+│       ├── runtimes.md               # 다른 에이전트에서 쓰기 위한 능력 모델
 │       ├── skill-writing-guide.md    # description·본문·스킬 frontmatter
 │       ├── skill-testing-guide.md    # with/without 비교·트리거 검증
 │       ├── qa-agent-guide.md         # 경계면 교차 비교 QA

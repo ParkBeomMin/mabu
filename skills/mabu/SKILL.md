@@ -37,6 +37,9 @@ license: Apache-2.0
      (`installed_plugins.json`) — 조달 가능한 기성 스킬 목록을 만든다
    - **스크립트 런타임**: 번들 스크립트를 쓸 계획이면 `uv`(파이썬)·`node` 유무를 확인한다.
      없으면 설치를 안내하고 거절 시 대체 경로로 간다 (`skill-writing-guide.md` §6-1)
+   - **위임 1회의 고정 오버헤드**: 하네스가 위임을 반복하므로, 한 번 재보고 줄일 스위치를
+     찾아 모든 위임에 고정한다 (`cost-control.md` §2). 재보지 않으면 한 줄 답에 수만
+     토큰이 나가는 걸 끝까지 모른다
    - 없는 도구·없는 스킬을 전제로 설계하는 것이 하네스 실패의 제1 원인이다
 3. 현황에 따라 분기:
    - **신규 구축** → Phase 1부터 전체 실행
@@ -137,6 +140,9 @@ memory: project               # 실행 간 지속 메모리가 필요할 때
 
 `inherit`가 기본값으로 안전한 이유: 사용자가 세션 모델을 올리면 하네스도 같이 좋아진다.
 하드코딩하면 하네스가 사용자의 선택을 무시한다.
+
+배정은 에이전트 단위가 아니라 **단계 단위**로도 본다 — 같은 에이전트의 초안 잡기와
+최종 심사는 필요한 티어가 다르다. 비용 레버 전체는 `references/cost-control.md`.
 
 #### 3-3. 필수 섹션
 
@@ -334,6 +340,8 @@ return { draft, verdict }
 - [ ] 실행 모드 명시 + **환경 감사 근거** (없는 도구 전제 설계 금지)
 - [ ] **런타임 프로파일과 확인된 능력을 규약 문서에 기록** (다른 런타임에서 뭐가 깨지는지)
 - [ ] 모델·노력을 작업 성격별 배정 (전부 최상위 모델 금지, 기본 `inherit`)
+- [ ] **비용 설계 점검** — 위임 오버헤드 실측, 컨텍스트 절단, 스키마로 재시도 차단,
+      루프 상한, 절삭한 것은 로그로 (`cost-control.md`)
 - [ ] `skills` 사전 로드 + 본문 "읽어라" 병기 (이중 안전장치)
 - [ ] 중복 검토 완료 (3-0, 4-0) + 기성 스킬 조달 검토 (skills: 물리기, 미설치 이름 금지)
 - [ ] **에이전트마다 스킬이 최소 하나** — 조달이든 제작이든
@@ -349,6 +357,7 @@ return { draft, verdict }
 - 실행 모드·패턴·에이전트 frontmatter 전체: `references/agent-design-patterns.md`
 - 오케스트레이터 템플릿 (Workflow + 서브): `references/orchestrator-template.md`
 - 런타임 프로파일 (Claude Code 밖에서 쓰기): `references/runtimes.md`
+- 비용 설계 (호출 수·오버헤드·컨텍스트·재시도): `references/cost-control.md`
 - 기성 스킬 조달 (superpowers·eli5 등): `references/skill-composition.md`
 - 스킬 작성: `references/skill-writing-guide.md` / 테스트: `references/skill-testing-guide.md`
 - QA 에이전트: `references/qa-agent-guide.md`

@@ -46,6 +46,7 @@ For the rare case where real-time interaction itself drives output quality, team
 - **Deterministic orchestration** — fan-out, generate-verify loops, retries, and schema validation enforced by a Workflow script. Interrupted runs resume from the last completed step via `resumeFromRunId`
 - **Skill composition** — proven third-party skills (superpowers, paperthin, eli5, ponytail) get attached to agents via the `skills:` preload field, following a task-type mapping. On machines without them, agents degrade gracefully to a one-line principle
 - **Task-aware model assignment** — judgment-heavy work gets higher tiers / high effort, mechanical work gets haiku / low. The default is `inherit`, respecting the user's session choice
+- **Cost by design** — a harness runs repeatedly, so one wasteful call multiplies. mabu measures the fixed overhead of a delegation once and trims it, caps loops in code, gates outputs with schemas so retries don't double the bill, and assigns model tier per *stage* rather than per agent
 - **Verification built in** — trigger tests (should / should-NOT near-miss queries), with-skill vs without-skill comparison runs, dry runs, and boundary-crossing QA
 - **An evolving system** — feedback flows back into agents, skills, and workflow scripts, tracked in a CLAUDE.md change log. Follow-up requests ("redo", "fix", "just re-run X") and partial resumption are supported
 
@@ -112,6 +113,8 @@ mabu/
 │       ├── agent-design-patterns.md  # Execution modes, patterns, full agent frontmatter
 │       ├── orchestrator-template.md  # Workflow script + entry-skill templates
 │       ├── skill-composition.md      # Sourcing third-party skills — mapping, traps, portability
+    ├── cost-control.md           # Call count, delegation overhead, context trimming, retries
+    ├── runtimes.md               # Capability model for running mabu on other agents
 │       ├── skill-writing-guide.md    # Descriptions, body style, skill frontmatter
 │       ├── skill-testing-guide.md    # With/without comparison, trigger verification
 │       ├── qa-agent-guide.md         # Boundary-crossing QA
