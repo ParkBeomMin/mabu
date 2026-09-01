@@ -14,13 +14,11 @@
 
 [English](README.md) | **한국어**
 
-> **"이 프로젝트에 하네스 만들어줘"** 한 문장이면, 도메인 설명이 에이전트 정의(`.claude/agents/`) +
-> 스킬(`.claude/skills/`) + **결정론적 Workflow 오케스트레이션 스크립트**(`workflows/`)로 바뀐다.
+> **"이 프로젝트에 하네스 만들어줘"** 한 문장이면, 도메인 설명이 에이전트 정의(`.claude/agents/`) + 스킬(`.claude/skills/`) + **결정론적 Workflow 오케스트레이션 스크립트**(`workflows/`)로 바뀐다.
 
 ## 왜 '마부'인가
 
-하네스(harness)는 원래 말에 채우는 **마구**다. 마구를 짓고, 말을 고르고, 고삐를 쥐는
-사람이 마부다. 이 도구가 하는 일이 정확히 그것이다.
+하네스(harness)는 원래 말에 채우는 **마구**다. 마구를 짓고, 말을 고르고, 고삐를 쥐는 사람이 마부다. 이 도구가 하는 일이 정확히 그것이다.
 
 | 마부의 세계 | 이 도구 |
 |---|---|
@@ -33,39 +31,23 @@
 
 ## 핵심 관점 — 판단은 에이전트에, 흐름은 스크립트에
 
-"누가 다음에 뭘 하나"를 모델 재량에 두면 실행마다 결과가 바뀐다. 이 하네스가 만드는
-오케스트레이션은 순서·병렬·루프 상한·산출물 스키마를 JavaScript가 강제하고, 모델은
-각 단계 안의 판단만 맡는다. 이 선택이 실제로 갈라놓는 것:
+"누가 다음에 뭘 하나"를 모델 재량에 두면 실행마다 결과가 바뀐다. 이 하네스가 만드는 오케스트레이션은 순서·병렬·루프 상한·산출물 스키마를 JavaScript가 강제하고, 모델은 각 단계 안의 판단만 맡는다. 이 선택이 실제로 갈라놓는 것:
 
-- **재현성** — 같은 요청은 같은 경로로 돈다. 깨지면 `journal.jsonl`(각 에이전트의 실제
-  반환값 기록)을 열어 어느 단계가 깨졌는지 짚는다. 하네스는 반복해서 돌리는 물건이라
-  이 차이가 누적된다
-- **비용** — 필요한 순간에 필요한 컨텍스트만 든 에이전트가 뜨고, 끝나면 사라진다.
-  에이전트 간 메시지 왕복도, 놀면서 컨텍스트를 물고 있는 대기 인원도 없다.
-  국소적 편의가 전역 비용으로 돌아오는 구조를 애초에 만들지 않는다
-- **안정성** — Workflow는 공식 기능이다. 실험 플래그 뒤의 기능에 하네스의 기본값을
-  걸지 않는다
-- **토론의 가치는 잃지 않는다** — 에이전트 간 실시간 토론의 실제 효용 대부분은 "다른
-  시각의 반박"이다. 그것은 생성 → 반박 전담 검증 → 종합의 비동기 다단계로 구현되며,
-  이쪽은 흐름이 재현 가능하다
+- **재현성** — 같은 요청은 같은 경로로 돈다. 깨지면 `journal.jsonl`(각 에이전트의 실제 반환값 기록)을 열어 어느 단계가 깨졌는지 짚는다. 하네스는 반복해서 돌리는 물건이라 이 차이가 누적된다
+- **비용** — 필요한 순간에 필요한 컨텍스트만 든 에이전트가 뜨고, 끝나면 사라진다. 에이전트 간 메시지 왕복도, 놀면서 컨텍스트를 물고 있는 대기 인원도 없다. 국소적 편의가 전역 비용으로 돌아오는 구조를 애초에 만들지 않는다
+- **안정성** — Workflow는 공식 기능이다. 실험 플래그 뒤의 기능에 하네스의 기본값을 걸지 않는다
+- **토론의 가치는 잃지 않는다** — 에이전트 간 실시간 토론의 실제 효용 대부분은 "다른 시각의 반박"이다. 그것은 생성 → 반박 전담 검증 → 종합의 비동기 다단계로 구현되며, 이쪽은 흐름이 재현 가능하다
 
-실시간 상호작용 자체가 산출물의 품질을 좌우하는 드문 경우를 위해 팀 모드도 지원한다 —
-단, Phase 0 환경 감사에서 팀이 켜져 있음을 확인한 경우에만.
+실시간 상호작용 자체가 산출물의 품질을 좌우하는 드문 경우를 위해 팀 모드도 지원한다 — 단, Phase 0 환경 감사에서 팀이 켜져 있음을 확인한 경우에만.
 
 ## Key Features
 
-- **환경 감사 우선** — 설계 전에 Workflow 유무·팀 활성화·설치 스킬 인벤토리를 확인한다.
-  없는 도구를 전제로 한 설계가 하네스 실패의 제1 원인이다
-- **결정론적 오케스트레이션** — 팬아웃·생성-검증 루프·재시도·스키마 검증을 Workflow
-  스크립트가 강제. 중단 시 `resumeFromRunId`로 완료 지점부터 재개
-- **스킬 조달(Composition)** — superpowers·paperthin·eli5·ponytail 등 검증된 기성 스킬을
-  작업 유형별 매핑에 따라 에이전트에 물린다. 미설치 환경에서는 원칙 한 줄로 우아하게 강등
-- **작업 성격별 모델 배정** — 판단 작업은 상위 티어/high effort, 기계 작업은 haiku/low.
-  기본은 `inherit`로 사용자의 세션 선택을 존중
-- **검증 내장** — 트리거 검증(should / should-NOT near-miss), with-skill 비교 실행,
-  드라이런, 경계면 교차 비교 QA
-- **진화하는 시스템** — 실행마다 피드백을 에이전트·스킬·워크플로우에 반영하고
-  CLAUDE.md 변경 이력으로 추적. "다시/수정/~만 재실행" 후속 작업과 부분 재개 지원
+- **환경 감사 우선** — 설계 전에 Workflow 유무·팀 활성화·설치 스킬 인벤토리를 확인한다. 없는 도구를 전제로 한 설계가 하네스 실패의 제1 원인이다
+- **결정론적 오케스트레이션** — 팬아웃·생성-검증 루프·재시도·스키마 검증을 Workflow 스크립트가 강제. 중단 시 `resumeFromRunId`로 완료 지점부터 재개
+- **스킬 조달(Composition)** — superpowers·paperthin·eli5·ponytail 등 검증된 기성 스킬을 작업 유형별 매핑에 따라 에이전트에 물린다. 미설치 환경에서는 원칙 한 줄로 우아하게 강등
+- **작업 성격별 모델 배정** — 판단 작업은 상위 티어/high effort, 기계 작업은 haiku/low. 기본은 `inherit`로 사용자의 세션 선택을 존중
+- **검증 내장** — 트리거 검증(should / should-NOT near-miss), with-skill 비교 실행, 드라이런, 경계면 교차 비교 QA
+- **진화하는 시스템** — 실행마다 피드백을 에이전트·스킬·워크플로우에 반영하고 CLAUDE.md 변경 이력으로 추적. "다시/수정/~만 재실행" 후속 작업과 부분 재개 지원
 
 ## Workflow
 
@@ -147,17 +129,19 @@ mabu/
 
 | 에이전트 작업 | 물리는 스킬 | 출처 |
 |---|---|---|
+| 요청 해석·브리프 컴파일 (오케스트레이터 진입) | `readchk` · `aim` | [paperthin](https://github.com/LilMGenius/paperthin) |
 | 설계·기획 발산 | `superpowers:brainstorming` | [superpowers](https://github.com/obra/superpowers) |
 | 디버깅·QA | `superpowers:systematic-debugging` + `verification-before-completion` | superpowers |
 | 구현 | `superpowers:test-driven-development` | superpowers |
-| 계획 킬 테스트 | `paperthin:hate` (검증 전용 에이전트에만) | [paperthin](https://github.com/LilMGenius/paperthin) |
-| 인수 스모크 | `paperthin:shower` · `factchk` | paperthin |
-| 문서·스킬 정리 | `paperthin:debloat` · `re0` · `ssotize` | paperthin |
+| 계획 킬 테스트 | `hate` (검증 전용 에이전트에만) | paperthin |
+| 인수 스모크 | `shower` · `factchk` | paperthin |
+| 문서·스킬 정리 | `debloat` · `re0` · `ssotize` | paperthin |
 | 코드 최소주의 | `ponytail` — **skills: 사전 로드로만** (자가 발동 0회 실측) | [ponytail](https://github.com/DietrichGebert/ponytail) |
 | 사용자 대면 보고 | `eli5` | [ELI5](https://github.com/DreambigOu/ELI5) |
 
-미설치 스킬은 `skills:`에 적지 않는다(유령 참조는 조용히 죽는다) — 대신 원칙 한 줄이
-에이전트 본문에 들어가 방향은 유지된다. 상세: [skill-composition.md](skills/mabu/references/skill-composition.md)
+이름은 설치 방식을 따른다 — 플러그인이면 `plugin:skill`, `npx skills add`나 디렉터리 복사면 접두사 없는 `skill`이다. paperthin은 공식 quickstart가 후자라 표도 그 기준으로 적었다. 추측하지 말고 실제 인벤토리에서 확인할 것.
+
+미설치 스킬은 `skills:`에 적지 않는다(유령 참조는 조용히 죽는다) — 대신 원칙 한 줄이 에이전트 본문에 들어가 방향은 유지된다. 상세: [skill-composition.md](skills/mabu/references/skill-composition.md)
 
 ## Use Cases — 이렇게 시켜보라
 
@@ -206,11 +190,7 @@ your-project/
 <details>
 <summary><b>Q. 물린 스킬(superpowers 등)이 없는 환경에서는?</b></summary>
 
-**A.** 하네스는 남의 스킬을 복사·설치하지 않는다. 대신 생성 시점에 인벤토리를 확인해서
-① 있으면 `skills:` 사전 로드, ② 없으면 그 스킬의 핵심 원칙 한 줄을 에이전트 본문에
-박는다. 방향은 유지되고 깊이는 손실되는 우아한 강등이다 — 원칙형 스킬(ponytail)은
-거의 무손실, 절차형(superpowers)·데이터형(eli5)은 설치가 값을 한다. 생성된 CLAUDE.md의
-"요구 스킬" 줄이 뭘 깔면 좋은지 알려준다.
+**A.** 하네스는 남의 스킬을 복사·설치하지 않는다. 대신 생성 시점에 인벤토리를 확인해서 ① 있으면 `skills:` 사전 로드, ② 없으면 그 스킬의 핵심 원칙 한 줄을 에이전트 본문에 박는다. 방향은 유지되고 깊이는 손실되는 우아한 강등이다 — 원칙형 스킬(ponytail)은 거의 무손실, 절차형(superpowers)·데이터형(eli5)은 설치가 값을 한다. 생성된 CLAUDE.md의 "요구 스킬" 줄이 뭘 깔면 좋은지 알려준다.
 </details>
 
 ## Requirements
