@@ -255,8 +255,20 @@ uv run scripts/collect.py    # 의존성 해석·설치·실행을 한 번에. �
 - 버전은 **하한만** 고정한다(`pillow>=11`). 정확히 못 박으면 다른 스크립트와 충돌하고,
   안 적으면 어느 날 깨진다
 - 일회성 도구 실행은 설치 없이 `uvx <tool>` — 예: `uvx ruff check`
-- **uv가 없는 환경도 있다.** 스킬 본문에 대체 경로를 한 줄 병기한다:
-  `uv run scripts/x.py (uv 없으면: pip install -r 주석의 dependencies 후 python scripts/x.py)`
+- **uv가 없으면 조용히 강등하지 말고 설치를 안내한다.** 팀 모드·기성 스킬과 같은 원칙이다:
+  무엇을 잃는지 + 설치 명령 + 안 깔아도 되는 이유를 한 번에 제시하고 고르게 한다.
+
+  ```bash
+  curl -LsSf https://astral.sh/uv/install.sh | sh   # macOS·Linux
+  # Windows:  powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+  # 또는 이미 있는 것으로:  pipx install uv  /  brew install uv  /  pip install uv
+  ```
+
+  안 깔았을 때의 대체 경로도 스킬 본문에 병기해 둔다 — 거절해도 하네스는 돌아야 한다:
+  `uv run scripts/x.py (uv 없으면: 주석의 dependencies를 pip install 후 python scripts/x.py)`
+
+  **거절하면 하네스 CLAUDE.md의 "요구 도구" 줄에 남긴다.** 나중에 깔았을 때 무엇이
+  간단해지는지가 거기 적혀 있어야 한다. 한 번 거절한 뒤 매번 다시 권하지 않는다
 - 첫 실행은 의존성 내려받느라 몇 초 걸린다. 그 뒤로는 캐시라 즉시다 —
   타임아웃을 짧게 잡은 검증 스크립트에서 이걸 실패로 오해하지 마라
 
