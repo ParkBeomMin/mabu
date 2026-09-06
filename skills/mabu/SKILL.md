@@ -40,6 +40,9 @@ license: Apache-2.0
    - **위임 1회의 고정 오버헤드**: 하네스가 위임을 반복하므로, 한 번 재보고 줄일 스위치를
      찾아 모든 위임에 고정한다 (`cost-control.md` §2). 재보지 않으면 한 줄 답에 수만
      토큰이 나가는 걸 끝까지 모른다
+   - **쓸 수 있는 다른 에이전트 CLI**: 셸에서 `codex`·`gemini` 같은 CLI가 잡히면 그것도
+     위임 수단이다. 독립적 반박·단계별 비용 배분에 쓴다
+     (`agent-design-patterns.md` §7). 모델 슬러그는 하드코딩하지 말고 그 CLI의 목록을 확인한다
    - 없는 도구·없는 스킬을 전제로 설계하는 것이 하네스 실패의 제1 원인이다
 3. 현황에 따라 분기:
    - **신규 구축** → Phase 1부터 전체 실행
@@ -142,7 +145,8 @@ memory: project               # 실행 간 지속 메모리가 필요할 때
 하드코딩하면 하네스가 사용자의 선택을 무시한다.
 
 배정은 에이전트 단위가 아니라 **단계 단위**로도 본다 — 같은 에이전트의 초안 잡기와
-최종 심사는 필요한 티어가 다르다. 비용 레버 전체는 `references/cost-control.md`.
+최종 심사는 필요한 티어가 다르다. 벤더를 넘는 배정(다른 에이전트 CLI에 한 단계 맡기기)은
+`references/agent-design-patterns.md` §7. 비용 레버 전체는 `references/cost-control.md`.
 
 #### 3-3. 필수 섹션
 
@@ -354,7 +358,7 @@ return { draft, verdict }
 
 ## 참고
 
-- 실행 모드·패턴·에이전트 frontmatter 전체: `references/agent-design-patterns.md`
+- 실행 모드·패턴·에이전트 frontmatter·교차 런타임 위임: `references/agent-design-patterns.md`
 - 오케스트레이터 템플릿 (Workflow + 서브): `references/orchestrator-template.md`
 - 런타임 프로파일 (Claude Code 밖에서 쓰기): `references/runtimes.md`
 - 비용 설계 (호출 수·오버헤드·컨텍스트·재시도): `references/cost-control.md`
