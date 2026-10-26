@@ -9,6 +9,11 @@ https://github.com/revfactory/harness)의 방법론(Phase 구조, 생성-검증 
 
 주요 변경:
 - TeamCreate/TaskCreate 기반 팀 모드(제거된 API) → Workflow 기본 + 환경 감사
-- 전 에이전트 opus 강제 → 작업 성격별 model/effort 배정 (기본 inherit)
+- 전 에이전트 opus 강제 → 업무 특성(복잡도·작업 기간·자율성·응답 속도)별 model/effort 배정
 - 오케스트레이터를 진입 스킬 + workflow 스크립트 2계층으로 분리
 - team-examples를 실전 하네스 예시로 교체
+
+upstream v2.1.0(2026-09-26)에서 이식한 것:
+- 재시도해도 소용없는 실패(사용량 한도·인증 만료·권한 거부) 구분과 정리 절차
+- 단계 경계 산출물 동결(완료 보고 확인 → 동결 공지 → 해시 기록 → 최종 대조)
+- 업무 특성 기반 모델 티어 선택(fable/opus/sonnet/haiku)

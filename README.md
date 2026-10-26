@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-1.0.0-brightgreen.svg" alt="Version">
+  <img src="https://img.shields.io/badge/Version-1.1.0-brightgreen.svg" alt="Version">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License"></a>
   <img src="https://img.shields.io/badge/Claude_Code-%E2%89%A5_2.1.178-purple.svg" alt="Claude Code">
   <img src="https://img.shields.io/badge/Mode-Workflow_Orchestration-orange.svg" alt="Workflow">
